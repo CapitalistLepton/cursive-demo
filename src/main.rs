@@ -1,4 +1,4 @@
-use cursive::views::{Canvas};
+use cursive::views::Canvas;
 use cursive::{Cursive, CursiveExt, XY};
 
 const MAP_W: usize = 15;
