@@ -5,7 +5,7 @@ use cursive::{Cursive, CursiveExt, XY};
 const MAP_W: usize = 15;
 const MAP_H: usize = 10;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 enum Tile {
     Blank,
     Wall,
@@ -33,6 +33,12 @@ impl GameState {
             }
         }
         state
+    }
+    fn in_bounds(&self, location: XY<usize>) -> bool {
+        location.x < MAP_W && location.y < MAP_H
+    }
+    fn in_bounds_and_blank(&self, location: XY<usize>) -> bool {
+        self.in_bounds(location) && self.tiles[location.y * MAP_W + location.x] == Tile::Blank
     }
 }
 
@@ -68,13 +74,29 @@ fn create_canvas() -> Canvas<GameState> {
             Event::WindowResize => todo!(),
             Event::Char(k) => {
                 if k == 'w' {
-                    state.player_location.y -= 1;
+                    let mut loc = state.player_location.clone();
+                    loc.y -= 1;
+                    if state.in_bounds_and_blank(loc) {
+                        state.player_location = loc;
+                    }
                 } else if k == 's' {
-                    state.player_location.y += 1;
+                    let mut loc = state.player_location.clone();
+                    loc.y += 1;
+                    if state.in_bounds_and_blank(loc) {
+                        state.player_location = loc;
+                    }
                 } else if k == 'a' {
-                    state.player_location.x -= 1;
+                    let mut loc = state.player_location.clone();
+                    loc.x -= 1;
+                    if state.in_bounds_and_blank(loc) {
+                        state.player_location = loc;
+                    }
                 } else if k == 'd' {
-                    state.player_location.x += 1;
+                    let mut loc = state.player_location.clone();
+                    loc.x += 1;
+                    if state.in_bounds_and_blank(loc) {
+                        state.player_location = loc;
+                    }
                 }
                 EventResult::Ignored
             }
