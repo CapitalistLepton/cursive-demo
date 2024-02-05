@@ -19,7 +19,15 @@ impl GameState {
         let mut state = Self {
             tiles: [Tile::Blank; MAP_W * MAP_H],
         };
-        state.tiles[4] = Tile::Wall;
+        for y in 0..MAP_H {
+            for x in 0..MAP_W {
+                if y == 0 || y == MAP_H - 1 {
+                    state.tiles[y * MAP_W + x] = Tile::Wall;
+                } else if x == 0 || x == MAP_W - 1 {
+                    state.tiles[y * MAP_W + x] = Tile::Wall;
+                }
+            }
+        }
         state
     }
 }
@@ -41,7 +49,7 @@ fn create_canvas() -> Canvas<GameState> {
         .with_draw(|state: &GameState, printer| {
             for y in 0..MAP_H {
                 for x in 0..MAP_W {
-                    let tile = state.tiles[y * 10 + x];
+                    let tile = state.tiles[y * MAP_W + x];
                     match tile {
                         Tile::Blank => printer.print(XY::new(x, y), "0"),
                         Tile::Wall => printer.print(XY::new(x, y), "1"),
